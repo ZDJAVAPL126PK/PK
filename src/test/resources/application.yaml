@@ -6,3 +6,8 @@ spring:
     driverClassName: org.h2.Driver
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+
+logging:
+  level:
+    root: OFF
+    com.sda.clinicapi: DEBUG
