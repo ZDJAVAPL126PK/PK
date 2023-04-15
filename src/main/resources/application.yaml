@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: none
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/clinic_db
+    username: root
+    password: pass
+    driver-class-name: com.mysql.cj.jdbc.Driver
