@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ClinicApiApplication {
 
     public static void main(String[] args) {
-        log.info("Test message");
         SpringApplication.run(ClinicApiApplication.class, args);
     }
 

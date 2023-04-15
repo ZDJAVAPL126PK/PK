@@ -1,4 +1,9 @@
+### SERVER CONFIG
+server:
+  port: 8080
+
 spring:
+  ### DB CONFIG
   jpa:
     hibernate.ddl-auto: none
     show-sql: true
@@ -7,6 +12,14 @@ spring:
     username: root
     password: pass
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  ### FLYWAY CONFIG
+  flyway:
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+
+### LOGGING CONFIG
 
 logging:
   level:
@@ -17,3 +30,4 @@ logging:
     rollingpolicy:
       max-history: 30
       max-file-size: 1GB
+
