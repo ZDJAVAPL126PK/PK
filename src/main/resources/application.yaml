@@ -7,3 +7,12 @@ spring:
     username: root
     password: pass
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  level: info
+  file:
+    name: log/clinics_api.log
+  logback:
+    rollingpolicy:
+      max-history: 30
+      max-file-size: 1GB
