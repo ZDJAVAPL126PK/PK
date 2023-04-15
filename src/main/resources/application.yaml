@@ -19,6 +19,12 @@ spring:
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
 
+### SECURITY CONFIG
+#  security:
+#    user:
+#      name: admin
+#      password: pass
+
 ### LOGGING CONFIG
 
 logging:
