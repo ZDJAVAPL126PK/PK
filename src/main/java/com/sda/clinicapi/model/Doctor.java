@@ -29,7 +29,6 @@ public class Doctor {
     @Column(nullable = false, length = 50)
     private String surname;
 
-    @Column(length = 255)
     private String description;
 
     @Column(nullable = false, length = 50)
@@ -41,6 +40,6 @@ public class Doctor {
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private Set<Address> address;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private Set<Appointment> appointments;
 }
