@@ -2,6 +2,11 @@
 server:
   port: 8080
 
+### APPLICATION CONFIG
+
+application:
+  version: @project.version@
+
 spring:
   ### DB CONFIG
   jpa:
@@ -19,21 +24,26 @@ spring:
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
 
-### SECURITY CONFIG
-#  security:
-#    user:
-#      name: admin
-#      password: pass
 
 ### LOGGING CONFIG
 
 logging:
   level:
-    root: info
+    root: INFO
   file:
     name: log/clinics_api.log
   logback:
     rollingpolicy:
       max-history: 30
       max-file-size: 1GB
+      total-size-cap: 10GB
+
+### SPRING DOC CONFIG
+
+springdoc:
+  swagger-ui:
+    path: swagger-ui
+    doc-expansion: none
+
+
 
