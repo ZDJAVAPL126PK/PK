@@ -9,7 +9,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-@Table(name = "doctor")
+@Table(name = "doctors")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Doctor {
@@ -26,7 +26,7 @@ public class Doctor {
     @Column(nullable = false, length = 50)
     private String surname;
 
-    @Column(length = 50)
+    @Column(length = 255)
     private String description;
 
     @Column(nullable = false, length = 50)
