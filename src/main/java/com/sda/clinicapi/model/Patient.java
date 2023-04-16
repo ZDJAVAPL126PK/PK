@@ -29,6 +29,7 @@ public class Patient {
 
     @Column(nullable = false)
     private String phoneNumber;
+
     @OneToMany(mappedBy = "patient")
     private Set<Appointment> appointment;
 }
