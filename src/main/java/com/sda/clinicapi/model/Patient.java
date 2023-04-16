@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
+@Table(name = "patients")
 public class Patient {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,4 +29,6 @@ public class Patient {
 
     @Column(nullable = false)
     private String phoneNumber;
+    @OneToMany(mappedBy = "patient")
+    private Set<Appointment> appointment;
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -39,6 +39,8 @@ public class Doctor {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-    private List<Address> address;
+    private Set<Address> address;
 
+    @OneToMany(mappedBy = "doctor")
+    private Set<Appointment> appointments;
 }
