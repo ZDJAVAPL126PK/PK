@@ -38,7 +38,7 @@ public class Doctor {
     @Column(nullable = false, length = 50)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     private List<Address> address;
 
 }
