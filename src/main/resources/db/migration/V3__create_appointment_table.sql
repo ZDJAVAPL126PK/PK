@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS appointment (
+CREATE TABLE IF NOT EXISTS appointments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     status VARCHAR(20) NOT NULL,
     date_and_time TIMESTAMP NOT NULL
