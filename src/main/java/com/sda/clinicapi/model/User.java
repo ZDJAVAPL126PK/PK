@@ -2,15 +2,15 @@ package com.sda.clinicapi.model;
 
 import com.sda.clinicapi.enums.Role;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Setter
 @Getter
+@Builder
 @Table(name = "users")
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -25,10 +25,14 @@ public class User {
     @Column(nullable = false, length = 30)
     private Role role;
 
+    @Column(nullable = false)
+    private String email;
+
     public User(User user) {
         this.username = user.username;
         this.password = user.password;
         this.enabled = user.enabled;
         this.role = user.role;
+        this.email = user.email;
     }
 }
