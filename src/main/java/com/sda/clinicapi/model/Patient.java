@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -27,4 +29,6 @@ public class Patient {
 
     @Column(nullable = false)
     private String phoneNumber;
+    @OneToMany(mappedBy = "patient")
+    private Set<Appointment> appointment;
 }
