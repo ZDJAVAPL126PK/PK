@@ -20,6 +20,10 @@ public class Appointment {
     private Long id;
     private AppointmentStatus status;
     private LocalDateTime dateAndTime;
+    
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Patient patient;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Doctor doctor;
 }
