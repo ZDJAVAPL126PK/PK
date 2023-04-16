@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS appointment (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    status VARCHAR(20) NOT NULL,
+    date_and_time TIMESTAMP NOT NULL
+    CHECK  (status IN ('CANCELED', 'CONFIRMED', 'AWAITING'))
+)
