@@ -5,15 +5,19 @@ import com.sda.clinicapi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -57,7 +61,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Method is being used to create new user.")
-    public void create(@RequestBody UserDTO userDTO) {
+    public void create(@Valid @RequestBody UserDTO userDTO) {
         userService.create(userDTO);
     }
 
@@ -70,7 +74,7 @@ public class UserController {
 
     @PutMapping("{username}")
     @Operation(summary = "Method is being used to update existing user.")
-    public void update(@RequestBody UserDTO userDTO, @PathVariable String username) {
+    public void update(@Valid @RequestBody UserDTO userDTO, @PathVariable String username) {
         userService.update(username, userDTO);
     }
 }

@@ -16,11 +16,15 @@ public class ErrorResponse {
     String message;
     LocalDateTime timestamp;
 
-    static ErrorResponse of(RuntimeException ex, HttpStatus status) {
+    static ErrorResponse of(Exception ex, HttpStatus status) {
+        return of(ex.getMessage(), status);
+    }
+
+    static ErrorResponse of(String message, HttpStatus status) {
         return ErrorResponse.builder()
                 .code(status.value())
                 .error(status.getReasonPhrase())
-                .message(ex.getMessage())
+                .message(message)
                 .timestamp(LocalDateTime.now())
                 .build();
     }
