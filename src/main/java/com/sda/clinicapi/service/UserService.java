@@ -6,6 +6,7 @@ import com.sda.clinicapi.mapper.UserMapper;
 import com.sda.clinicapi.model.User;
 import com.sda.clinicapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ public class UserService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void create(UserDTO userDTO) {
         String username = userDTO.getUsername();
@@ -23,9 +25,9 @@ public class UserService {
         }
 
         User user = userMapper.map(userDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true);
 
         userRepository.save(user);
     }
-
 }
