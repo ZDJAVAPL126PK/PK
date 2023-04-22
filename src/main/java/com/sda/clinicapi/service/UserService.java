@@ -76,7 +76,7 @@ public class UserService {
         log.info("Updating user with username '{}'.", username);
 
         if (!username.equals(userDTO.getUsername())) {
-            String message = "Usernames conflict!";
+            String message = "Usernames does not match!";
             log.error(message);
             throw new UsernameConflictException(message);
         }
