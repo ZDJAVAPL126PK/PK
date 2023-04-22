@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
-                .formLogin();
+                .httpBasic();
 
         return http.build();
     }
