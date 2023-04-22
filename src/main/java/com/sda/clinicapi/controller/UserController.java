@@ -67,4 +67,10 @@ public class UserController {
         userService.delete(username);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("{username}")
+    @Operation(summary = "Method is being used to update existing user.")
+    public void update(@RequestBody UserDTO userDTO, @PathVariable String username) {
+        userService.update(username, userDTO);
+    }
 }

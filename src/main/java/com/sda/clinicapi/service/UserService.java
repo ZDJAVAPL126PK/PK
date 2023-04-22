@@ -67,14 +67,34 @@ public class UserService {
 
     public void delete(String username) {
         log.info("Removing user with username '{}'.", username);
+        checkIfUserExists(username);
+        userRepository.deleteById(username);
+        log.info("Removing user completed.");
+    }
+
+    public void update(String username, UserDTO userDTO) {
+        log.info("Updating user with username '{}'.", username);
+
+        if (!username.equals(userDTO.getUsername())) {
+            String message = "Usernames conflict!";
+            log.error(message);
+            throw new UsernameConflictException(message);
+        }
+
+        checkIfUserExists(username);
+        User user = userMapper.map(userDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        log.info("Updating user completed.");
+    }
+
+    private void checkIfUserExists(String username) {
         boolean exists = userRepository.existsById(username);
         if (!exists) {
             String message = "User with given username does not exists!";
             log.error(message);
             throw new ResourceNotFoundException(message);
         }
-        userRepository.deleteById(username);
-        log.info("Removing user completed.");
     }
 
 }
