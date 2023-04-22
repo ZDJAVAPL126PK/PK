@@ -8,8 +8,11 @@ import com.sda.clinicapi.model.User;
 import com.sda.clinicapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -19,6 +22,29 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public List<UserDTO> findAll(PageRequest pageRequest) {
+        log.info("Fetching all users...");
+        List<UserDTO> users = userRepository.findAll(pageRequest).stream()
+                .map(userMapper::map)
+                .toList();
+
+        log.info("Fetch completed.");
+        return users;
+    }
+
+    public UserDTO findUserByUsername(String username) {
+        log.info("Fetching user with username '{}'.", username);
+        UserDTO userDTO = userRepository.findByUsername(username)
+                .map(user -> userMapper.map(user))
+                .orElseThrow(() -> {
+                    String message = "User with given username does not exists!";
+                    log.error(message);
+                    throw new ResourceNotFoundException(message);
+                });
+        log.info("Fetch completed.");
+        return userDTO;
+    }
 
     public void create(UserDTO userDTO) {
         String username = userDTO.getUsername();
