@@ -12,4 +12,5 @@ public class UserDTO {
     String email;
     String username;
     String password;
+    boolean enabled;
 }
