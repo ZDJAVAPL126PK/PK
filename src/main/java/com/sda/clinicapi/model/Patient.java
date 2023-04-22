@@ -1,16 +1,19 @@
 package com.sda.clinicapi.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "patients")
 public class Patient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
