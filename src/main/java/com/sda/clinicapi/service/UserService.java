@@ -1,7 +1,7 @@
 package com.sda.clinicapi.service;
 
 import com.sda.clinicapi.dto.UserDTO;
-import com.sda.clinicapi.exceptio.UsernameConflictException;
+import com.sda.clinicapi.exception.UsernameConflictException;
 import com.sda.clinicapi.mapper.UserMapper;
 import com.sda.clinicapi.model.User;
 import com.sda.clinicapi.repository.UserRepository;
@@ -19,8 +19,7 @@ public class UserService {
         String username = userDTO.getUsername();
         boolean exists = userRepository.existsById(username);
         if (exists) {
-            throw new UsernameConflictException(
-                    "User with given username already exists!");
+            throw new UsernameConflictException("User with given username already exists!");
         }
 
         User user = userMapper.map(userDTO);

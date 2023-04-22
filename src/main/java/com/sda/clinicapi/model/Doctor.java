@@ -1,10 +1,7 @@
 package com.sda.clinicapi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -12,9 +9,10 @@ import java.util.Set;
 @Entity
 @Setter
 @Getter
-@Table(name = "doctors")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "doctors")
 public class Doctor {
 
     @Id

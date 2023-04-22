@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-//@SecurityRequirement(name = "basicAuth")
+@SecurityRequirement(name = "basicAuth")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody UserDTO userDTO) {
         userService.create(userDTO);

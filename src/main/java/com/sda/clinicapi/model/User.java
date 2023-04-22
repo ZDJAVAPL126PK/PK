@@ -8,9 +8,9 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
-@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 public class User {
 
     @Id

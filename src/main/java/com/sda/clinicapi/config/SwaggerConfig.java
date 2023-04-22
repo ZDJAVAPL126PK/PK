@@ -31,7 +31,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public OpenAPI springShopOpenAPI() {
+    public OpenAPI openAPI() {
 
         License license = new License().name("Apache 2.0");
 

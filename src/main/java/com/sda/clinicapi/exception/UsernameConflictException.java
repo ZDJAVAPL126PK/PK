@@ -1,4 +1,4 @@
-package com.sda.clinicapi.exceptio;
+package com.sda.clinicapi.exception;
 
 public class UsernameConflictException extends RuntimeException {
 

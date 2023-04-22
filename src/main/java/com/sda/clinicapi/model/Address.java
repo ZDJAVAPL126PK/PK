@@ -1,17 +1,15 @@
 package com.sda.clinicapi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Setter
 @Getter
-@Table(name = "addresses")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "addresses")
 public class Address {
 
     @Id
@@ -27,7 +25,7 @@ public class Address {
     @Column(nullable = false, length = 25)
     private String postCode;
 
-    @ManyToOne(cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     private Doctor doctor;
 
