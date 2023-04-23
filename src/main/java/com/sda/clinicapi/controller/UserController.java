@@ -22,10 +22,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Users Controller")
-@RequestMapping("/api/users")
 @PreAuthorize("hasRole('ADMIN')")
 @SecurityRequirement(name = "basicAuth")
+@RequestMapping(UserController.API_USERS_PATH)
 public class UserController {
+
+    public static final String API_USERS_PATH = "/api/users";
 
     private final UserService userService;
 
