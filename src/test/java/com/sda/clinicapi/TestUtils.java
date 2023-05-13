@@ -17,7 +17,7 @@ public class TestUtils {
                 .username(username)
                 .email("user@mail.com")
                 .password("pass")
-                .role(Role.ROLE_USER)
+                .role(Role.ROLE_PATIENT)
                 .enabled(true)
                 .build();
     }
@@ -31,7 +31,7 @@ public class TestUtils {
                 .email("userDTO@mail.com")
                 .username(username)
                 .password("pass")
-                .role(Role.ROLE_USER)
+                .role(Role.ROLE_PATIENT)
                 .enabled(true)
                 .build();
 

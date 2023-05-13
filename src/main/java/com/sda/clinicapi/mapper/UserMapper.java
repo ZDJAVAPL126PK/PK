@@ -2,40 +2,15 @@ package com.sda.clinicapi.mapper;
 
 import com.sda.clinicapi.dto.UserDTO;
 import com.sda.clinicapi.model.User;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-import java.util.Objects;
+@Mapper
+public interface UserMapper {
 
-@Component
-public class UserMapper {
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    public UserDTO map(User user) {
+    UserDTO map(User user);
 
-        if (Objects.isNull(user)) {
-            return UserDTO.builder().build();
-        }
-
-        return UserDTO.builder()
-                .email(user.getEmail())
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .role(user.getRole())
-                .enabled(user.isEnabled())
-                .build();
-    }
-
-    public User map(UserDTO userDTO) {
-
-        if (Objects.isNull(userDTO)) {
-            return new User();
-        }
-
-        return User.builder()
-                .email(userDTO.getEmail())
-                .username(userDTO.getUsername())
-                .password(userDTO.getPassword())
-                .role(userDTO.getRole())
-                .enabled(userDTO.isEnabled())
-                .build();
-    }
+    User map(UserDTO userDTO);
 }

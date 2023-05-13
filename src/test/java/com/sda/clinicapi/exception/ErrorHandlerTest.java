@@ -2,16 +2,8 @@ package com.sda.clinicapi.exception;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import java.lang.reflect.Parameter;
-import java.util.List;
 
 class ErrorHandlerTest {
 
@@ -23,10 +15,10 @@ class ErrorHandlerTest {
         // given
         String expectedMessage = "Conflict!";
         HttpStatus status = HttpStatus.CONFLICT;
-        UsernameConflictException ex = new UsernameConflictException(expectedMessage);
+        ConflictException ex = new ConflictException(expectedMessage);
 
         // when
-        ResponseEntity<ErrorResponse> response = errorHandler.handleUsernameConflict(ex);
+        ResponseEntity<ErrorResponse> response = errorHandler.handleConflict(ex);
         ErrorResponse actualBody = response.getBody();
 
         // then

@@ -14,10 +14,10 @@ import java.util.Optional;
 
 @DataJpaTest
 @Sql(scripts = "classpath:sql/users-repo-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class UserRepositoryTest {
+class UsersRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
     @Test
     void testFindAll() {
@@ -25,7 +25,7 @@ class UserRepositoryTest {
         int expectedSize = 3;
 
         // when
-        List<User> users = userRepository.findAll();
+        List<User> users = usersRepository.findAll();
 
         // then
         Assertions.assertEquals(expectedSize, users.size());
@@ -37,7 +37,7 @@ class UserRepositoryTest {
         String nonExistingUsername = "nonExistingUsername";
 
         // when
-        Optional<User> optionalUser = userRepository.findByUsername(nonExistingUsername);
+        Optional<User> optionalUser = usersRepository.findByUsername(nonExistingUsername);
 
         // then
         Assertions.assertFalse(optionalUser.isPresent());
@@ -47,7 +47,7 @@ class UserRepositoryTest {
     @ValueSource(strings = {"admin", "doctor", "user"})
     void testFindByUsernameSuccess(String username) {
         // when
-        Optional<User> optionalUser = userRepository.findByUsername(username);
+        Optional<User> optionalUser = usersRepository.findByUsername(username);
 
         // then
         Assertions.assertTrue(optionalUser.isPresent());

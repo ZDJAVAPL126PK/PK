@@ -3,10 +3,10 @@ package com.sda.clinicapi.service;
 import com.sda.clinicapi.TestUtils;
 import com.sda.clinicapi.dto.UserDTO;
 import com.sda.clinicapi.exception.ResourceNotFoundException;
-import com.sda.clinicapi.exception.UsernameConflictException;
+import com.sda.clinicapi.exception.ConflictException;
 import com.sda.clinicapi.mapper.UserMapper;
 import com.sda.clinicapi.model.User;
-import com.sda.clinicapi.repository.UserRepository;
+import com.sda.clinicapi.repository.UsersRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 //@SpringBootTest
-class UserServiceTest {
+class UsersServiceTest {
 
 //    @Autowired
 //    private UserMapper userMapper;
@@ -33,15 +33,15 @@ class UserServiceTest {
 //    @MockBean
 //    private UserRepository userRepository;
 
-    private final UserMapper userMapper = new UserMapper();
+    private final UserMapper userMapper = UserMapper.INSTANCE;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final UserRepository userRepository = Mockito.mock(UserRepository.class);
-    private final UserService userService = new UserService(userMapper, userRepository, passwordEncoder);
+    private final UsersRepository usersRepository = Mockito.mock(UsersRepository.class);
+    private final UsersService usersService = new UsersService(userMapper, usersRepository, passwordEncoder);
 
 
     @BeforeEach
     void reset() {
-        Mockito.reset(userRepository);
+        Mockito.reset(usersRepository);
     }
 
     @Test
@@ -50,15 +50,15 @@ class UserServiceTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
         PageImpl<User> page = new PageImpl<>(Collections.emptyList());
 
-        Mockito.when(userRepository.findAll(pageRequest)).thenReturn(page);
+        Mockito.when(usersRepository.findAll(pageRequest)).thenReturn(page);
 
         // when
-        List<UserDTO> actualList = userService.findAll(pageRequest);
+        List<UserDTO> actualList = usersService.findAll(pageRequest);
 
         // then
         Assertions.assertTrue(actualList.isEmpty());
-        Mockito.verify(userRepository).findAll(pageRequest);
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Mockito.verify(usersRepository).findAll(pageRequest);
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
 
@@ -77,17 +77,17 @@ class UserServiceTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
         PageImpl<User> page = new PageImpl<>(pageContent);
 
-        Mockito.when(userRepository.findAll(pageRequest)).thenReturn(page);
+        Mockito.when(usersRepository.findAll(pageRequest)).thenReturn(page);
 
         // when
-        List<UserDTO> actualList = userService.findAll(pageRequest);
+        List<UserDTO> actualList = usersService.findAll(pageRequest);
 
         // then
         Assertions.assertEquals(expectedSize, actualList.size());
         Assertions.assertTrue(actualList.containsAll(List.of(userDTO1, userDTO2)));
 
-        Mockito.verify(userRepository).findAll(pageRequest);
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Mockito.verify(usersRepository).findAll(pageRequest);
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
     @Test
@@ -95,16 +95,16 @@ class UserServiceTest {
         // given
         String nonExistingUsername = "nonExistingUsername";
 
-        Mockito.when(userRepository.findByUsername(nonExistingUsername))
+        Mockito.when(usersRepository.findByUsername(nonExistingUsername))
                 .thenReturn(Optional.empty());
 
         // when
-        Executable executable = () -> userService.findUserByUsername(nonExistingUsername);
+        Executable executable = () -> usersService.findUserByUsername(nonExistingUsername);
 
         // then
         Assertions.assertThrows(ResourceNotFoundException.class, executable);
-        Mockito.verify(userRepository).findByUsername(nonExistingUsername);
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Mockito.verify(usersRepository).findByUsername(nonExistingUsername);
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
     @Test
@@ -114,47 +114,47 @@ class UserServiceTest {
         User user = TestUtils.createUser(username);
         UserDTO expectedUserDTO = userMapper.map(user);
 
-        Mockito.when(userRepository.findByUsername(username))
+        Mockito.when(usersRepository.findByUsername(username))
                 .thenReturn(Optional.of(user));
 
         // when
-        UserDTO actualUserDTO = userService.findUserByUsername(username);
+        UserDTO actualUserDTO = usersService.findUserByUsername(username);
 
         // then
         Assertions.assertEquals(expectedUserDTO, actualUserDTO);
-        Mockito.verify(userRepository).findByUsername(username);
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Mockito.verify(usersRepository).findByUsername(username);
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
     @Test
     void testDeleteUserNotFound() {
         // given
         String nonExistingUsername = "nonExistingUsername";
-        Mockito.when(userRepository.existsById(nonExistingUsername)).thenReturn(false);
+        Mockito.when(usersRepository.existsById(nonExistingUsername)).thenReturn(false);
 
         // when
-        Executable executable = () -> userService.delete(nonExistingUsername);
+        Executable executable = () -> usersService.delete(nonExistingUsername);
 
         // then
         Assertions.assertThrows(ResourceNotFoundException.class, executable);
-        Mockito.verify(userRepository).existsById(nonExistingUsername);
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Mockito.verify(usersRepository).existsById(nonExistingUsername);
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
     @Test
     void testDeleteSuccess() {
         // given
         String username = "admin";
-        Mockito.when(userRepository.existsById(username)).thenReturn(true);
-        Mockito.doNothing().when(userRepository).deleteById(username);
+        Mockito.when(usersRepository.existsById(username)).thenReturn(true);
+        Mockito.doNothing().when(usersRepository).deleteById(username);
 
         // when
-        userService.delete(username);
+        usersService.delete(username);
 
         // then
-        Mockito.verify(userRepository).existsById(username);
-        Mockito.verify(userRepository).deleteById(username);
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Mockito.verify(usersRepository).existsById(username);
+        Mockito.verify(usersRepository).deleteById(username);
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
     @Test
@@ -163,15 +163,15 @@ class UserServiceTest {
         String existingUsername = "existingUsername";
         UserDTO userDTO = TestUtils.createUserDTO(existingUsername);
 
-        Mockito.when(userRepository.existsById(existingUsername)).thenReturn(true);
+        Mockito.when(usersRepository.existsById(existingUsername)).thenReturn(true);
 
         // when
-        Executable executable = () -> userService.create(userDTO);
+        Executable executable = () -> usersService.create(userDTO);
 
         // then
-        Assertions.assertThrows(UsernameConflictException.class, executable);
-        Mockito.verify(userRepository).existsById(existingUsername);
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Assertions.assertThrows(ConflictException.class, executable);
+        Mockito.verify(usersRepository).existsById(existingUsername);
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
     @Test
@@ -180,15 +180,15 @@ class UserServiceTest {
         String username = "username";
         UserDTO userDTO = TestUtils.createUserDTO(username);
 
-        Mockito.when(userRepository.existsById(username)).thenReturn(false);
+        Mockito.when(usersRepository.existsById(username)).thenReturn(false);
 
         // when
-        userService.create(userDTO);
+        usersService.create(userDTO);
 
         // then
-        Mockito.verify(userRepository).existsById(username);
-        Mockito.verify(userRepository).save(Mockito.any(User.class));
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Mockito.verify(usersRepository).existsById(username);
+        Mockito.verify(usersRepository).save(Mockito.any(User.class));
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
     @Test
@@ -197,15 +197,15 @@ class UserServiceTest {
         String username = "username";
         UserDTO userDTO = TestUtils.createUserDTO(username);
 
-        Mockito.when(userRepository.existsById(username)).thenReturn(true);
+        Mockito.when(usersRepository.existsById(username)).thenReturn(true);
 
         // when
-        userService.update(username, userDTO);
+        usersService.update(username, userDTO);
 
         // then
-        Mockito.verify(userRepository).existsById(username);
-        Mockito.verify(userRepository).save(Mockito.any(User.class));
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Mockito.verify(usersRepository).existsById(username);
+        Mockito.verify(usersRepository).save(Mockito.any(User.class));
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
     @Test
@@ -215,11 +215,11 @@ class UserServiceTest {
         UserDTO userDTO = TestUtils.createUserDTO("diff username");
 
         // when
-        Executable executable = () -> userService.update(usernameParam, userDTO);
+        Executable executable = () -> usersService.update(usernameParam, userDTO);
 
         // then
-        Assertions.assertThrows(UsernameConflictException.class, executable);
-        Mockito.verifyNoInteractions(userRepository);
+        Assertions.assertThrows(ConflictException.class, executable);
+        Mockito.verifyNoInteractions(usersRepository);
     }
 
     @Test
@@ -228,15 +228,15 @@ class UserServiceTest {
         String nonExistingUsername = "nonExistingUsername";
         UserDTO userDTO = TestUtils.createUserDTO(nonExistingUsername);
 
-        Mockito.when(userRepository.existsById(nonExistingUsername)).thenReturn(false);
+        Mockito.when(usersRepository.existsById(nonExistingUsername)).thenReturn(false);
 
         // when
-        Executable executable = () -> userService.update(nonExistingUsername, userDTO);
+        Executable executable = () -> usersService.update(nonExistingUsername, userDTO);
 
         // then
         Assertions.assertThrows(ResourceNotFoundException.class, executable);
-        Mockito.verify(userRepository).existsById(nonExistingUsername);
-        Mockito.verifyNoMoreInteractions(userRepository);
+        Mockito.verify(usersRepository).existsById(nonExistingUsername);
+        Mockito.verifyNoMoreInteractions(usersRepository);
     }
 
 }

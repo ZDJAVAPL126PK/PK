@@ -7,8 +7,8 @@ import com.sda.clinicapi.dto.UserDTO;
 import com.sda.clinicapi.exception.ErrorHandler;
 import com.sda.clinicapi.exception.ErrorResponse;
 import com.sda.clinicapi.exception.ResourceNotFoundException;
-import com.sda.clinicapi.exception.UsernameConflictException;
-import com.sda.clinicapi.service.UserService;
+import com.sda.clinicapi.exception.ConflictException;
+import com.sda.clinicapi.service.UsersService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,9 +24,9 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@WebMvcTest(controllers = UserController.class)
+@WebMvcTest(controllers = UsersController.class)
 @Import({SecurityConfig.class, ErrorHandler.class})
-class UserControllerTest {
+class UsersControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -35,11 +35,11 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private UserService userService;
+    private UsersService usersService;
 
     @BeforeEach
     void reset() {
-        Mockito.reset(userService);
+        Mockito.reset(usersService);
     }
 
     @Test
@@ -47,12 +47,12 @@ class UserControllerTest {
     void testFindUserByUsernameNotFound() throws Exception {
         // given
         String username = "admin";
-        String endpointPath = UserController.API_USERS_PATH + "/{username}"; // "/api/users/{username}"
+        String endpointPath = UsersController.API_USERS_PATH + "/{username}"; // "/api/users/{username}"
 
         ResourceNotFoundException exception = new ResourceNotFoundException("Not Found!");
         ErrorResponse errorResponse = ErrorResponse.of(exception, HttpStatus.NOT_FOUND);
 
-        Mockito.when(userService.findUserByUsername(username)).thenThrow(exception);
+        Mockito.when(usersService.findUserByUsername(username)).thenThrow(exception);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 // "/api/users/{username}", "admin"
@@ -67,8 +67,8 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value(errorResponse.getError()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(errorResponse.getMessage()));
 
-        Mockito.verify(userService).findUserByUsername(username);
-        Mockito.verifyNoMoreInteractions(userService);
+        Mockito.verify(usersService).findUserByUsername(username);
+        Mockito.verifyNoMoreInteractions(usersService);
     }
 
     @Test
@@ -76,7 +76,7 @@ class UserControllerTest {
     void testFindUserByUsernameSuccess() throws Exception {
         // given
         String username = "admin";
-        String endpointPath = UserController.API_USERS_PATH + "/{username}"; // "/api/users/admin"
+        String endpointPath = UsersController.API_USERS_PATH + "/{username}"; // "/api/users/admin"
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get(endpointPath, username)
@@ -85,7 +85,7 @@ class UserControllerTest {
         UserDTO userDTO = TestUtils.createUserDTO(username);
 
         String jsonUser = objectMapper.writeValueAsString(userDTO);
-        Mockito.when(userService.findUserByUsername(username)).thenReturn(userDTO);
+        Mockito.when(usersService.findUserByUsername(username)).thenReturn(userDTO);
 
         // when / then
         mockMvc.perform(request)
@@ -93,16 +93,16 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
                 .andExpect(MockMvcResultMatchers.content().json(jsonUser));
 
-        Mockito.verify(userService).findUserByUsername(username);
-        Mockito.verifyNoMoreInteractions(userService);
+        Mockito.verify(usersService).findUserByUsername(username);
+        Mockito.verifyNoMoreInteractions(usersService);
     }
 
     @Test
-    @WithMockUser(roles = {"USER", "DOCTOR"})
+    @WithMockUser(roles = {"PATIENT", "DOCTOR"})
     void testFindUserByUsernameForbidden() throws Exception {
         // given
         String username = "admin";
-        String endpointPath = UserController.API_USERS_PATH + "/{username}"; // "/api/users/admin"
+        String endpointPath = UsersController.API_USERS_PATH + "/{username}"; // "/api/users/admin"
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(endpointPath, username);
 
@@ -110,18 +110,18 @@ class UserControllerTest {
         mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.FORBIDDEN.value()));
 
-        Mockito.verifyNoInteractions(userService);
+        Mockito.verifyNoInteractions(usersService);
     }
 
     @Test
-    @WithMockUser(roles = {"USER", "DOCTOR"})
+    @WithMockUser(roles = {"PATIENT", "DOCTOR"})
     void testCreateForbidden() throws Exception {
         // given
         UserDTO userDTO = TestUtils.createUserDTO();
         String userJson = objectMapper.writeValueAsString(userDTO);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(UserController.API_USERS_PATH)
+                .post(UsersController.API_USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(userJson);
 
@@ -129,7 +129,7 @@ class UserControllerTest {
         mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.FORBIDDEN.value()));
 
-        Mockito.verifyNoInteractions(userService);
+        Mockito.verifyNoInteractions(usersService);
     }
 
     @Test
@@ -140,13 +140,13 @@ class UserControllerTest {
         UserDTO userDTO = TestUtils.createUserDTO(existingUsername);
         String userJson = objectMapper.writeValueAsString(userDTO);
 
-        UsernameConflictException exception = new UsernameConflictException("UsernameConflictException");
+        ConflictException exception = new ConflictException("UsernameConflictException");
         ErrorResponse errorResponse = ErrorResponse.of(exception, HttpStatus.CONFLICT);
 
-        Mockito.doThrow(exception).when(userService).create(userDTO);
+        Mockito.doThrow(exception).when(usersService).create(userDTO);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(UserController.API_USERS_PATH)
+                .post(UsersController.API_USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(userJson);
 
@@ -158,8 +158,8 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value(errorResponse.getError()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(errorResponse.getMessage()));
 
-        Mockito.verify(userService).create(userDTO);
-        Mockito.verifyNoMoreInteractions(userService);
+        Mockito.verify(usersService).create(userDTO);
+        Mockito.verifyNoMoreInteractions(usersService);
     }
 
     @Test
@@ -169,10 +169,10 @@ class UserControllerTest {
         UserDTO userDTO = TestUtils.createUserDTO();
         String userJson = objectMapper.writeValueAsString(userDTO);
 
-        Mockito.doNothing().when(userService).create(userDTO);
+        Mockito.doNothing().when(usersService).create(userDTO);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(UserController.API_USERS_PATH)
+                .post(UsersController.API_USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(userJson);
 
@@ -180,7 +180,7 @@ class UserControllerTest {
         mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));
 
-        Mockito.verify(userService).create(userDTO);
-        Mockito.verifyNoMoreInteractions(userService);
+        Mockito.verify(usersService).create(userDTO);
+        Mockito.verifyNoMoreInteractions(usersService);
     }
 }

@@ -24,8 +24,8 @@ public class ErrorHandler {
         return ResponseEntity.status(status).body(response);
     }
 
-    @ExceptionHandler(UsernameConflictException.class)
-    public ResponseEntity<ErrorResponse> handleUsernameConflict(UsernameConflictException ex) {
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex) {
         return getErrorResponse(ex, HttpStatus.CONFLICT);
     }
 

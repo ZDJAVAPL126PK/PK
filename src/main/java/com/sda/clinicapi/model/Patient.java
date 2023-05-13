@@ -3,8 +3,6 @@ package com.sda.clinicapi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -28,11 +26,9 @@ public class Patient {
     private String pesel;
 
     @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "patient")
-    private Set<Appointment> appointment;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "username", referencedColumnName = "username")
+    private User user;
 }

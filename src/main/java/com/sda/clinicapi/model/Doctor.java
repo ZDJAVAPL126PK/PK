@@ -30,14 +30,10 @@ public class Doctor {
     private String description;
 
     @Column(nullable = false, length = 50)
-    private String email;
-
-    @Column(nullable = false, length = 50)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-    private Set<Address> address;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "username", referencedColumnName = "username")
+    private User user;
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
-    private Set<Appointment> appointments;
 }

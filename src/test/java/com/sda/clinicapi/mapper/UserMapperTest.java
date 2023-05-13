@@ -5,10 +5,12 @@ import com.sda.clinicapi.dto.UserDTO;
 import com.sda.clinicapi.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 class UserMapperTest {
 
-    private final UserMapper userMapper = new UserMapper();
+    private final UserMapper userMapper = UserMapper.INSTANCE;
 
     @Test
     void testMapUserToUserDTONullParam() {
@@ -19,11 +21,7 @@ class UserMapperTest {
         UserDTO userDTO = userMapper.map(user);
 
         // then
-        Assertions.assertNull(userDTO.getEmail());
-        Assertions.assertNull(userDTO.getUsername());
-        Assertions.assertNull(userDTO.getPassword());
-        Assertions.assertNull(userDTO.getRole());
-        Assertions.assertFalse(userDTO.isEnabled());
+        Assertions.assertNull(userDTO);
     }
 
     @Test
@@ -52,11 +50,7 @@ class UserMapperTest {
         User user = userMapper.map(userDTO);
 
         // then
-        Assertions.assertNull(user.getEmail());
-        Assertions.assertNull(user.getUsername());
-        Assertions.assertNull(user.getPassword());
-        Assertions.assertNull(user.getRole());
-        Assertions.assertFalse(user.isEnabled());
+        Assertions.assertNull(user);
     }
 
     @Test
