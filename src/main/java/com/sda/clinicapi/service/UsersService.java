@@ -1,8 +1,8 @@
 package com.sda.clinicapi.service;
 
 import com.sda.clinicapi.dto.UserDTO;
-import com.sda.clinicapi.exception.ResourceNotFoundException;
 import com.sda.clinicapi.exception.ConflictException;
+import com.sda.clinicapi.exception.ResourceNotFoundException;
 import com.sda.clinicapi.mapper.UserMapper;
 import com.sda.clinicapi.model.User;
 import com.sda.clinicapi.repository.UsersRepository;
@@ -85,6 +85,14 @@ public class UsersService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         usersRepository.save(user);
         log.info("Updating user completed.");
+    }
+
+    public void enable(String username) {
+        usersRepository.enable(username);
+    }
+
+    public void disable(String username) {
+        usersRepository.disable(username);
     }
 
     private void checkIfUserExists(String username) {

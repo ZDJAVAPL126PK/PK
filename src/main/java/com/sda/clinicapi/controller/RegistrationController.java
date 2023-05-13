@@ -3,10 +3,12 @@ package com.sda.clinicapi.controller;
 import com.sda.clinicapi.dto.DoctorSignupDTO;
 import com.sda.clinicapi.dto.PatientSignupDTO;
 import com.sda.clinicapi.service.RegistrationService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,13 @@ public class RegistrationController {
     @ResponseStatus(HttpStatus.CREATED)
     public void signupPatient(@Valid @RequestBody PatientSignupDTO patientSignupDTO) {
         registrationService.signupPatient(patientSignupDTO);
+    }
+
+    @GetMapping("/confirm-email")
+    @Operation(summary = "Method is being used to confirm user email.")
+    public ResponseEntity<String> confirmEmail(@RequestParam String username, @RequestParam String code) {
+        registrationService.confirmEmail(username, code);
+        return ResponseEntity.ok("Email confirmed!");
     }
 
 }

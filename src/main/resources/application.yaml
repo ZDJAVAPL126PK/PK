@@ -28,6 +28,18 @@ spring:
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
 
+  ### MAIL CONFIG
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: zdjava126pl@gmail.com
+    password: // TODO
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
 
 ### LOGGING CONFIG
 logging:
@@ -46,3 +58,6 @@ springdoc:
   swagger-ui:
     path: swagger-ui
     doc-expansion: none
+
+
+
