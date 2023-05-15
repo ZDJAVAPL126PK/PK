@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -64,7 +66,7 @@ public class RegistrationService {
     private void sendEmail(UserDTO userDTO) {
         String confirmationCode = confirmationCodesService.generateCode();
         String confirmationLink = generateLink(userDTO, confirmationCode);
-        emailsService.sendConfirmationCode(userDTO.getEmail(), confirmationLink);
+        CompletableFuture.runAsync(() -> emailsService.sendConfirmationCode(userDTO.getEmail(), confirmationLink));
     }
 
     private String generateLink(UserDTO userDTO, String confirmationCode) {

@@ -2,11 +2,12 @@ package com.sda.clinicapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DoctorSignupDTO {
 
     String title;
